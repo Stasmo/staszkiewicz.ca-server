@@ -2,5 +2,5 @@ services:
           - docker
 
 script:
-        docker build --tag stasmo/staszkiewicz.ca-server .
-        docker push stasmo/staszkiewicz.ca-server
+        - docker build --tag stasmo/staszkiewicz.ca-server .
+        - docker push stasmo/staszkiewicz.ca-server
