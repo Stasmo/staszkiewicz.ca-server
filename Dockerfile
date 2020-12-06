@@ -1,6 +1,6 @@
 FROM node:12-alpine
 
-RUN useradd -ms /bin/bash node
+RUN cat /etc/passwd
 
 USER node
 WORKDIR /home/node
