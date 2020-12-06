@@ -12,9 +12,16 @@ const dynamodb = new AWS.DynamoDB({ region: dbRegion })
 const db = new AWS.DynamoDB.DocumentClient({service: dynamodb})
 
 app.get('/api/posts', async (req, res) => {
-  let postResults = await db.scan({
-      TableName: postsTableName
-  }).promise()
+  let params = {
+    TableName: postsTableName,
+    ScanFilter: {
+      Posted: {
+        ComparisonOperator: 'NOT_NULL'
+      }
+    }
+  }
+
+  let postResults = await db.scan(params).promise()
 
   res.send(postResults.Items)
 })
