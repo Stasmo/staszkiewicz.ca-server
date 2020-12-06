@@ -3,4 +3,5 @@ services:
 
 script:
         - docker build --tag stasmo/staszkiewicz.ca-server .
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker push stasmo/staszkiewicz.ca-server
