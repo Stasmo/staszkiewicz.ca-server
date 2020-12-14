@@ -7,8 +7,10 @@ app.use(cors())
 
 const Post = require('./models/Post');
 
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://mongo/staszkiewicz?authSource=admin'
+
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://stasmo:stasmo@mongo/staszkiewicz?authSource=admin', { useNewUrlParser: true });
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
