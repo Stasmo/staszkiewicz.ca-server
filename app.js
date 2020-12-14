@@ -1,4 +1,3 @@
-const AWS = require('aws-sdk')
 const express = require('express')
 const app = express()
 const port = 3000
@@ -6,26 +5,20 @@ const port = 3000
 const cors = require('cors')
 app.use(cors())
 
-const postsTableName = process.env.POSTS_TABLE_NAME || 'staszkiewicz.ca-posts'
-const dbRegion = process.env.DB_REGION || 'us-west-2'
-const dynamodb = new AWS.DynamoDB({ region: dbRegion })
-const db = new AWS.DynamoDB.DocumentClient({service: dynamodb})
+const Post = require('./models/Post');
 
-app.get('/api/posts', async (req, res) => {
-  let params = {
-    TableName: postsTableName,
-    ScanFilter: {
-      Posted: {
-        ComparisonOperator: 'NOT_NULL'
-      }
-    }
-  }
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://stasmo:stasmo@mongo/staszkiewicz?authSource=admin', { useNewUrlParser: true });
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  app.get('/api/posts', async (req, res) => {
+    let posts = await Post.find().sort({ _id : -1 }).limit(10)
 
-  let postResults = await db.scan(params).promise()
+    res.send(posts)
+  })
 
-  res.send(postResults.Items)
-})
-
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+  app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`)
+  })
+});
